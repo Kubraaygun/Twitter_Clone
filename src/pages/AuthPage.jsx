@@ -1,32 +1,58 @@
 import { useState } from "react";
 import { auth } from "./../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const [isError, setIsError] = useState(false);
   //Formun Gonderilmesi
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     //eger kaydolma modundaysa:
     if (isSignUp) {
       createUserWithEmailAndPassword(auth, email, pass)
         .then(() => {
-          navigate("/home")
-          
+          toast.info("Hesabınız Oluşturuldu");
+          navigate("/home");
         })
-        .catch((err) => {
-          console.dir(err.code)
-        });
+        .catch((err) => toast.error(err.code));
     } else {
       //eger giris yap modundaysa:
-      console.log("Hesabiniza giris yapiliyor");
+      signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+          toast.info("Hesabınıza Giriş Yapıldı");
+          navigate("/home");
+        })
+        .catch((err) => {
+          //eger sifre hatasi varsa state'i guncelle
+          if (err.code === "auth/invalid-credential") {
+            toast.error(`Üzgünüz bir hata oluştu: ${err.code}`);
+            setIsError(true);
+          }
+        });
     }
   };
+
+//sifremi unuttum maili gonder
+const sendMail=()=>{
+  sendPasswordResetEmail(auth,email)
+    .then(()=>{
+      toast.info("Epostanız şifre sıfırlama isteği gönderildi")
+    })
+  
+}
+
+
   return (
     <section className="h-screen grid place-items-center">
       <div className="bg-black flex flex-col gap-10 py-16 px-32 rounded-lg">
@@ -39,7 +65,7 @@ const AuthPage = () => {
         {/*Google Buton */}
         <button className="flex items-center bg-white py-2 px-10 rounded-full text-black gap-3 transition hover:bg-gray-300">
           <img className="h-[20px]" src="/google-logo.svg" />
-          <span>Google İle Giriş Yap </span>
+          <span className="whitespace-nowrap">Google İle Giriş Yap </span>
         </button>
 
         {/*Giris Formu */}
@@ -75,9 +101,10 @@ const AuthPage = () => {
             </span>
           </p>
         </form>
-        <p className="text-center text-red-500 hidden">
-          Şifrenizi mi unuttunuz?
-        </p>
+
+        {isError && (
+          <p onClick={sendMail} className="text-center text-red-500 cursor-pointer">Şifrenizi mi unuttunuz?</p>
+        )}
       </div>
     </section>
   );

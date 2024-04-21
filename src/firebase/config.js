@@ -6,7 +6,7 @@ import { getAuth,GoogleAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDgezAUvd2SZNxH5cA-Mqq1euFHJVSg0L8",
+  apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "twitter-8a16c.firebaseapp.com",
   projectId: "twitter-8a16c",
   storageBucket: "twitter-8a16c.appspot.com",

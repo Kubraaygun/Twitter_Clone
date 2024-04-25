@@ -1,4 +1,8 @@
-<h1>Kullanilan Teknolojiler</h1>
+<h1>Twiter Clone Project</h1>
+
+
+
+<h2>Kullanilan Teknolojiler</h2>
 react-router-dom
 react-toastify
 react-icons

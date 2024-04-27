@@ -1,4 +1,4 @@
-<h1>Twiter Clone Project</h1>
+<h1>Twitter Clone Project</h1>
 
 
 

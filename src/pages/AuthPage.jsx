@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { auth } from "./../firebase/config";
+import { auth, provider } from "./../firebase/config";
 import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -52,6 +53,13 @@ const sendMail=()=>{
   
 }
 
+//google ile oturum acma
+
+const loginWithGoogle=()=>{
+  signInWithPopup(auth,provider)
+  .then(()=>navigate("/home"))
+}
+
 
   return (
     <section className="h-screen grid place-items-center">
@@ -63,7 +71,7 @@ const sendMail=()=>{
         <h1 className="text-center font-bold text-xl">Twitter'a Giriş Yap</h1>
 
         {/*Google Buton */}
-        <button className="flex items-center bg-white py-2 px-10 rounded-full text-black gap-3 transition hover:bg-gray-300">
+        <button onClick={loginWithGoogle} className="flex items-center bg-white py-2 px-10 rounded-full text-black gap-3 transition hover:bg-gray-300">
           <img className="h-[20px]" src="/google-logo.svg" />
           <span className="whitespace-nowrap">Google İle Giriş Yap </span>
         </button>

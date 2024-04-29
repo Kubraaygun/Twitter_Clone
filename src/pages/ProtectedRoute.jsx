@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { auth } from "../firebase/config";
 
 const ProtectedRoute = () => {
@@ -20,22 +20,12 @@ const ProtectedRoute = () => {
     //Kullanici sayfadan ayrilirsa izleyiciyi kaldir
     return () => unsub();
   }, []);
-  //eger yetkisi yoksa ;
+  //eger yetkisi yoksa logine yonlendir ;
 
-  if (!isAuth) return <h1>Bu sayfayi goruntuleme yetkiniz yok</h1>;
-
-  //eger yetkisi varsa;
-
-
-
-
-  return (
-    <div>
-      <h1>yetkiniz var: sayfa icerigi:</h1>
-      {/**Alt route'un ekranda yerlesecegi yeri belirler */}
-      <Outlet />
-    </div>
-  );
+  if (isAuth===false) return <Navigate to={"/"} />;
+  //eger yetkisi varsa sayfayi goster;
+//outlet: alt route'un ekranda yerlesecegi yeri belirler
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

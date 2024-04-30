@@ -12,3 +12,13 @@ body{
   display: grid;
   grid-template-columns: 1fr minmax(400px,600px) 1fr;
 }
+
+
+.feed main::-webkit-scrollbar{
+  background: transparent;
+  width: 6px;
+}
+
+.feed main::-webkit-scrollbar-thumb{
+  background:gray;
+}

@@ -1,18 +1,36 @@
 import { BsCardImage } from "react-icons/bs";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db,storage } from "../firebase/config";
+import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
 
 const Form = ({ user }) => {
+  //tweet koleksiyonunn refereansini al
+  const tweetsCol = collection(db, "tweets");
+
+  //dosya eger resimse resmi storage'a yukle
+  //rsmin url'ini fonksiyonun cagrildigi yere dondur
+  const uploadImage = async(file) => {
+    //1- dosya resim degilse fonksiyonu durdur
+    if (!file || !file.type.startsWith("image")) return null;
+
+    //2-dosyanin yuklenecegi yerin referansini olustur
+ const fileRef=ref(storage,file.name)
+    
+    //3-referansini olusturdugumuz yere dosyayi yukle
+    await uploadBytes(fileRef,file)
+    //4-yuklenen dosyanin url'sine eris
+return await getDownloadURL(fileRef)
+  };
+
+  //formun gonderilmesi
   const handleSubmit = async (e) => {
-    //tweet koleksiyonunn refereansini al
-    const tweetsCol = collection(db, "tweets");
-    console.log(user);
-    //formun gonderilmesi
     e.preventDefault();
     //inputtaki verilere eris
     const textContent = e.target[0].value;
     const imageContent = e.target[1].files[0];
 
+    //resmi yukle
+    uploadImage(imageContent);
     //tweet koleksiyonuna yeni dokuman ekle
     await addDoc(tweetsCol, {
       textContent,

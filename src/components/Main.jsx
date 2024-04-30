@@ -1,9 +1,14 @@
-import React from 'react'
+import Form  from "./Form";
 
-const Main = () => {
+const Main = ({user}) => {
   return (
-    <div>Main</div>
-  )
-}
+    <main className="border border-gray-700 overflow-y-auto">
+      <header className="font-bold p-4 border-b-[1px] border-gray-700">
+        Anasayfa
+      </header>
+      <Form user={user} />
+    </main>
+  );
+};
 
-export default Main
+export default Main;

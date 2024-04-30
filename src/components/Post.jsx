@@ -3,10 +3,14 @@ import { FaRetweet } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
 import { AiOutlineHeart } from "react-icons/ai";
 import { FiShare2 } from "react-icons/fi";
+import moment from "moment/moment";
+import "moment/locale/tr";
 
 const Post = ({ tweet }) => {
-const date= tweet.createdAt.toDate();
-console.log(date)
+    //tweet atilma tarihinin ne kadar zaman once oldugunu hesapla
+const date= moment(tweet?.createdAt?.toDate()).fromNow();
+
+
   return (
     <div className="relative flex gap-3 py-6 px-3 border-b-[1px] border-gray-700">
       <img
@@ -21,7 +25,7 @@ console.log(date)
           <div className="flex items-center gap-3">
             <p className="font-bold">{tweet.user.name}</p>
             <p className="text-gray-400">{tweet.user.name}</p>
-            <p className="text-gray-400">10saat once</p>
+            <p className="text-gray-400">{date}</p>
           </div>
           <button>||||</button>
         </div>

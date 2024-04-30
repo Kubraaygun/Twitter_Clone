@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Form from "./Form";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot,orderBy,query } from "firebase/firestore";
 import { db } from "../firebase/config";
 import Spinner from './Spinner';
 import Post from "./Post";
@@ -10,7 +10,9 @@ const Main = ({ user }) => {
   const tweetsCol = collection(db, "tweets");
   //tweet koleksiyonundaki verileri anlik olarak al
   useEffect(() => {
-    const unsub = onSnapshot(tweetsCol, (snapshot) => {
+    //filtreleme ayari
+    const q=query(tweetsCol, orderBy("createdAt","desc"))
+    const unsub = onSnapshot(q, (snapshot) => {
       //gecici dizi
       const tempTweets = [];
       //butun dokumanlari don

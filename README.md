@@ -8,6 +8,6 @@
 -react-icons
 -moment
 -uuid
--firebasea
+-firebase
 -tailwind
  

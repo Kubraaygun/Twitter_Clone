@@ -5,10 +5,13 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { FiShare2 } from "react-icons/fi";
 import moment from "moment/moment";
 import "moment/locale/tr";
-import { auth, db } from '../../firebase/config';
-import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase/config";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const Post = ({ tweet }) => {
+  //aktif kullanici bu tweeti like dizisi icerisinde var mi
+  const isLiked = tweet.likes.includes(auth.currentUser.uid);
+  console.log(auth.currentUser, tweet);
   //tweet atilma tarihinin ne kadar zaman once oldugunu hesapla
   const date = moment(tweet?.createdAt?.toDate()).fromNow();
 
@@ -19,7 +22,9 @@ const Post = ({ tweet }) => {
 
     //dokumanin bir degerini guncelle
     await updateDoc(ref, {
-      textContent: "sonradan duzenlendi",
+      likes: isLiked
+        ? arrayRemove(auth.currentUser.uid) // like varsa kaldir
+        : arrayUnion(auth.currentUser.uid), //like varsa ekle
     });
   };
   return (
@@ -38,7 +43,8 @@ const Post = ({ tweet }) => {
             <p className="text-gray-400">{tweet.user.name}</p>
             <p className="text-gray-400">{date}</p>
           </div>
-          <button>||||</button>
+
+          {tweet.user.id === auth.currentUser.uid && <button>||||</button>}
         </div>
         {/**Orta Kisim Tweet Icerigi*/}
         <div className="my-4">
@@ -62,9 +68,11 @@ const Post = ({ tweet }) => {
 
           <div
             onClick={handleLike}
-            className="grid place-items-center py-2 px-3 rounded-full cursor-pointer transition hover:bg-[#e857d969]"
+            className="flex justify-center items-center gap-2 py-2 px-3 rounded-full cursor-pointer transition hover:bg-[#e857d969]"
           >
-            <AiOutlineHeart />
+            {isLiked ? <FcLike /> : <AiOutlineHeart />}
+
+            <span>{tweet.likes.length}</span>
           </div>
 
           <div className="grid place-items-center py-2 px-3 rounded-full cursor-pointer transition hover:bg-[#7e7e7ea8]">

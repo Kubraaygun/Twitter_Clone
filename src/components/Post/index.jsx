@@ -62,10 +62,13 @@ const Post = ({ tweet }) => {
         {/**Ust Kisim  Kullanici Bilgileri*/}
 
         <div className="flex justify-between items-center ">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 whitespace-nowrap">
             <p className="font-bold">{tweet.user.name}</p>
             <p className="text-gray-400">{tweet.user.name}</p>
             <p className="text-gray-400">{date}</p>
+            {tweet.isEdited && <p className="text-gray-400 text-[12px]">
+           * Düzenlendi </p>}
+
           </div>
 
           {tweet.user.id === auth.currentUser.uid && (

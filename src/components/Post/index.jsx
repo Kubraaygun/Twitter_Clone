@@ -6,9 +6,19 @@ import { FiShare2 } from "react-icons/fi";
 import moment from "moment/moment";
 import "moment/locale/tr";
 import { auth, db } from "../../firebase/config";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import Dropdown from "./Dropdown";
+import { useState } from "react";
+import EditMode from "./EditMode";
 
 const Post = ({ tweet }) => {
+  const [isEditMode, setIsEditMode] = useState(false);
   //aktif kullanici bu tweeti like dizisi icerisinde var mi
   const isLiked = tweet.likes.includes(auth.currentUser.uid);
   console.log(auth.currentUser, tweet);
@@ -27,6 +37,20 @@ const Post = ({ tweet }) => {
         : arrayUnion(auth.currentUser.uid), //like varsa ekle
     });
   };
+
+  //tweeti kaldir
+
+  const handleDelete = async () => {
+    //kullanicinin onayini al
+    if (confirm("Tweet'i silmeyi onaylıyor musunuz?")) {
+      //kaldirilacak elemanin referansini alma
+      const tweetRef = doc(db, "tweets", tweet.id);
+
+      //dokumani kaldir
+      await deleteDoc(tweetRef);
+    }
+  };
+
   return (
     <div className="relative flex gap-3 py-6 px-3 border-b-[1px] border-gray-700">
       <img
@@ -44,12 +68,23 @@ const Post = ({ tweet }) => {
             <p className="text-gray-400">{date}</p>
           </div>
 
-          {tweet.user.id === auth.currentUser.uid && <button>||||</button>}
+          {tweet.user.id === auth.currentUser.uid && (
+            <Dropdown
+              setIsEditMode={setIsEditMode}
+              handleDelete={handleDelete}
+            />
+          )}
         </div>
         {/**Orta Kisim Tweet Icerigi*/}
         <div className="my-4">
-          {tweet.textContent && <p>{tweet.textContent}</p>}
-          {tweet.imageContent && (
+          {/**duzenleme modunda ise editMode bileseni ekrana bas */}
+
+          {isEditMode && (
+            <EditMode tweet={tweet} close={() => setIsEditMode(false)} />
+          )}
+
+          {tweet.textContent && !isEditMode && <p>{tweet.textContent}</p>}
+          {tweet.imageContent && !isEditMode && (
             <img
               className="my-2 rounded-lg w-full object-cover max-h-[400px]"
               src={tweet.imageContent}

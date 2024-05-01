@@ -46,7 +46,7 @@ Bu proje, Firebase'in sunduğu kolay kullanım ve ölçeklenebilirlik avantajlar
 
 <h2>Ekran Görüntüsü</h2>
 
-![](./public/coıngıf.gif)
+![](./public/twitterClone.gif)
 
 
 
